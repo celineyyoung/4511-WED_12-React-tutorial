@@ -5,9 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Modal,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DatePickerField from "../components/DatePickerField";
 
 export default function CreateTaskScreen({
   newTitle,
@@ -22,7 +21,7 @@ export default function CreateTaskScreen({
   setCurrentScreen,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
+
   // form validation
   const handleCreateTask = () => {
     if (newTitle.trim() === "") {
@@ -68,52 +67,7 @@ export default function CreateTaskScreen({
           multiline
         />
 
-        <Text style={styles.label}>Due Date</Text>
-
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={() => setShowDatePicker(true)}>
-          <Text style={newDueDate ? styles.dateText : styles.datePlaceholder}>
-            {newDueDate || "Select due date"}
-          </Text>
-
-          <Text style={styles.calendarIcon}>📅</Text>
-        </TouchableOpacity>
-
-        <Modal visible={showDatePicker} transparent={true} animationType="fade">
-          <View style={styles.dateModalOverlay}>
-            <View style={styles.datePickerCard}>
-              <Text style={styles.datePickerTitle}>Select Due Date</Text>
-
-              <DateTimePicker
-                value={new Date()}
-                mode="date"
-                display="inline"
-                minimumDate={new Date()}
-                onChange={(event, selectedDate) => {
-                  if (selectedDate) {
-                    const formattedDate = selectedDate.toLocaleDateString(
-                      "en-AU",
-                      {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }
-                    );
-
-                    setNewDueDate(formattedDate);
-                  }
-                }}
-              />
-
-              <TouchableOpacity
-                style={styles.dateDoneButton}
-                onPress={() => setShowDatePicker(false)}>
-                <Text style={styles.dateDoneButtonText}>Done</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <DatePickerField value={newDueDate} onChange={setNewDueDate} />
 
         <Text style={styles.label}>Visibility</Text>
 
@@ -265,75 +219,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#B91C1C",
     marginTop: 12,
-  },
-
-  dateInput: {
-    backgroundColor: "#F7F8FA",
-    borderWidth: 1,
-    borderColor: "#D1D5DB",
-    borderRadius: 10,
-    padding: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  dateText: {
-    fontSize: 16,
-    color: "#111827",
-  },
-
-  datePlaceholder: {
-    fontSize: 16,
-    color: "#9CA3AF",
-  },
-
-  calendarIcon: {
-    fontSize: 18,
-  },
-  dateModalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-
-  datePickerCard: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
-    padding: 20,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-
-    elevation: 5,
-  },
-
-  datePickerTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#373735",
-    marginBottom: 12,
-  },
-
-  dateDoneButton: {
-    marginTop: 15,
-    padding: 12,
-    borderRadius: 9,
-    backgroundColor: "#6F6E60",
-    alignItems: "center",
-  },
-
-  dateDoneButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
   },
 });

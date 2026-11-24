@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 
+import DatePickerField from "../components/DatePickerField";
 export default function EditTaskScreen({
   editTitle,
   setEditTitle,
@@ -47,11 +48,7 @@ export default function EditTaskScreen({
 
         <Text style={styles.label}>Due Date</Text>
 
-        <TextInput
-          style={styles.input}
-          value={editDueDate}
-          onChangeText={setEditDueDate}
-        />
+        <DatePickerField value={editDueDate} onChange={setEditDueDate} />
 
         <TouchableOpacity style={styles.saveButton} onPress={saveEdit}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
