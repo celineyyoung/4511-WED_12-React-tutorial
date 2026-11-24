@@ -10,6 +10,7 @@ import {
 
 import BottomNav from "../components/BottomNav";
 import ActivityButton from "../components/ActivityButton";
+import ConfirmationModal from "../components/ConfirmationModal";
 export default function MyTasksScreen({
   tasks,
   toggleComplete,
@@ -181,37 +182,18 @@ export default function MyTasksScreen({
           </View>
         </View>
       </Modal>
-      <Modal
+      <ConfirmationModal
         visible={taskToDelete !== null}
-        transparent={true}
-        animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.deletePopup}>
-            <Text style={styles.deletePopupTitle}>Delete Task?</Text>
-
-            <Text style={styles.deletePopupText}>
-              Are you sure you want to delete "{taskToDelete?.title}"?
-            </Text>
-
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setTaskToDelete(null)}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.confirmDeleteButton}
-                onPress={() => {
-                  deleteTask(taskToDelete.id);
-                  setTaskToDelete(null);
-                }}>
-                <Text style={styles.confirmDeleteButtonText}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        title="Delete Task?"
+        message={`Are you sure you want to delete "${taskToDelete?.title}"?`}
+        confirmText="Delete"
+        destructive={true}
+        onCancel={() => setTaskToDelete(null)}
+        onConfirm={() => {
+          deleteTask(taskToDelete.id);
+          setTaskToDelete(null);
+        }}
+      />
       <BottomNav
         currentScreen={currentScreen}
         setCurrentScreen={setCurrentScreen}

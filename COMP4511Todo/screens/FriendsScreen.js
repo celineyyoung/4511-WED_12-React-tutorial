@@ -10,6 +10,8 @@ import {
   StyleSheet,
 } from "react-native";
 
+import ConfirmationModal from "../components/ConfirmationModal";
+
 export default function FriendsScreen({
   friends,
   setFriends,
@@ -174,36 +176,15 @@ export default function FriendsScreen({
         </View>
       </Modal>
 
-      <Modal
+      <ConfirmationModal
         visible={friendToRemove !== null}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setFriendToRemove(null)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.removeFriendModal}>
-            <Text style={styles.modalTitle}>Remove Friend?</Text>
-
-            <Text style={styles.removeFriendText}>
-              Are you sure you want to remove {friendToRemove?.name} from your
-              friends?
-            </Text>
-
-            <View style={styles.modalButtonRow}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setFriendToRemove(null)}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.confirmRemoveButton}
-                onPress={confirmRemoveFriend}>
-                <Text style={styles.confirmRemoveText}>Remove</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        title="Remove Friend?"
+        message={`Are you sure you want to remove ${friendToRemove?.name} from your friends?`}
+        confirmText="Remove"
+        destructive={true}
+        onCancel={() => setFriendToRemove(null)}
+        onConfirm={confirmRemoveFriend}
+      />
     </View>
   );
 }

@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  TextInput,
+  ScrollView,
 } from "react-native";
 import BottomNav from "../components/BottomNav";
 export default function SharedTaskDetailsScreen({
@@ -13,9 +15,22 @@ export default function SharedTaskDetailsScreen({
   setCurrentScreen,
   currentScreen,
   setSelectedTaskId,
+  comments,
+  addComment,
 }) {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const feedbackOpacity = useRef(new Animated.Value(0)).current;
+  const [commentText, setCommentText] = useState("");
+
+  const handleAddComment = () => {
+    if (commentText.trim() === "") {
+      return;
+    }
+
+    addComment(selectedSharedTask.id, commentText.trim());
+    setCommentText("");
+    showFeedback(`Comment sent to ${selectedSharedTask.owner}!`);
+  };
 
   const showFeedback = (message) => {
     setFeedbackMessage(message);
@@ -40,83 +55,121 @@ export default function SharedTaskDetailsScreen({
   };
   return (
     <View style={styles.container}>
-      {/* BACK */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => setSelectedSharedTaskId(null)}>
-        <Text style={styles.backButtonText}>← Shared With Me</Text>
-      </TouchableOpacity>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled">
+        {/* BACK */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => setSelectedSharedTaskId(null)}>
+          <Text style={styles.backButtonText}>← Shared With Me</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.heading}>Task Details</Text>
+        <Text style={styles.heading}>Task Details</Text>
 
-      <View style={styles.card}>
-        {/* FRIEND */}
-        <View style={styles.ownerRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {selectedSharedTask.owner.charAt(0)}
-            </Text>
+        <View style={styles.card}>
+          {/* FRIEND */}
+          <View style={styles.ownerRow}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {selectedSharedTask.owner.charAt(0)}
+              </Text>
+            </View>
+
+            <View>
+              <Text style={styles.ownerName}>{selectedSharedTask.owner}</Text>
+
+              <Text style={styles.sharedLabel}>Shared this task with you</Text>
+            </View>
           </View>
 
-          <View>
-            <Text style={styles.ownerName}>{selectedSharedTask.owner}</Text>
+          {/* TASK */}
+          <Text style={styles.taskTitle}>{selectedSharedTask.title}</Text>
 
-            <Text style={styles.sharedLabel}>Shared this task with you</Text>
+          <Text style={styles.label}>Description</Text>
+
+          <Text style={styles.description}>
+            {selectedSharedTask.description}
+          </Text>
+
+          <Text style={styles.label}>Due Date</Text>
+
+          <Text style={styles.description}>{selectedSharedTask.dueDate}</Text>
+
+          {/* ENCOURAGEMENT */}
+
+          <Text style={styles.encouragementHeading}>Send encouragement</Text>
+
+          <Text style={styles.encouragementHelp}>
+            Let {selectedSharedTask.owner} know you're supporting them.
+          </Text>
+
+          <View style={styles.encouragementGrid}>
+            <TouchableOpacity
+              style={styles.encouragementButton}
+              onPress={() =>
+                showFeedback(`Good Job sent to ${selectedSharedTask.owner}!`)
+              }>
+              <Text style={styles.encouragementText}>👍 Good Job</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.encouragementButton}
+              onPress={() =>
+                showFeedback(`Keep Going sent to ${selectedSharedTask.owner}!`)
+              }>
+              <Text style={styles.encouragementText}>👏 Keep Going</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.encouragementButton}
+              onPress={() =>
+                showFeedback(`Lock In sent to ${selectedSharedTask.owner}!`)
+              }>
+              <Text style={styles.encouragementText}>💪 Lock In</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.encouragementButton}
+              onPress={() =>
+                showFeedback(`Checking In sent to ${selectedSharedTask.owner}!`)
+              }>
+              <Text style={styles.encouragementText}>👀 Checking In</Text>
+            </TouchableOpacity>
           </View>
+          <Text style={styles.commentHeading}>Add a comment</Text>
+
+          <Text style={styles.commentHelp}>
+            Send a personal message to {selectedSharedTask.owner}.
+          </Text>
+
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Write a comment..."
+            value={commentText}
+            onChangeText={setCommentText}
+            multiline
+          />
+
+          <TouchableOpacity
+            style={styles.commentButton}
+            onPress={handleAddComment}>
+            <Text style={styles.commentButtonText}>Add Comment</Text>
+          </TouchableOpacity>
+
+          {comments[selectedSharedTask.id]?.length > 0 && (
+            <View style={styles.commentsSection}>
+              <Text style={styles.commentsTitle}>Your comments</Text>
+
+              {comments[selectedSharedTask.id].map((comment) => (
+                <View key={comment.id} style={styles.commentCard}>
+                  <Text style={styles.commentText}>{comment.text}</Text>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
-
-        {/* TASK */}
-        <Text style={styles.taskTitle}>{selectedSharedTask.title}</Text>
-
-        <Text style={styles.label}>Description</Text>
-
-        <Text style={styles.description}>{selectedSharedTask.description}</Text>
-
-        <Text style={styles.label}>Due Date</Text>
-
-        <Text style={styles.description}>{selectedSharedTask.dueDate}</Text>
-
-        {/* ENCOURAGEMENT */}
-
-        <Text style={styles.encouragementHeading}>Send encouragement</Text>
-
-        <Text style={styles.encouragementHelp}>
-          Let {selectedSharedTask.owner} know you're supporting them.
-        </Text>
-
-        <View style={styles.encouragementGrid}>
-          <TouchableOpacity
-            style={styles.encouragementButton}
-            onPress={() =>
-              showFeedback(`Good Job sent to ${selectedSharedTask.owner}!`)
-            }>
-            <Text style={styles.encouragementText}>👍 Good Job</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.encouragementButton}
-            onPress={() =>
-              showFeedback(`Keep Going sent to ${selectedSharedTask.owner}!`)
-            }>
-            <Text style={styles.encouragementText}>👏 Keep Going</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.encouragementButton}
-            onPress={() =>
-              showFeedback(`Lock In sent to ${selectedSharedTask.owner}!`)
-            }>
-            <Text style={styles.encouragementText}>💪 Lock In</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.encouragementButton}
-            onPress={() =>
-              showFeedback(`Checking In sent to ${selectedSharedTask.owner}!`)
-            }>
-            <Text style={styles.encouragementText}>👀 Checking In</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
       {feedbackMessage !== "" && (
         <Animated.View
           style={[
@@ -141,9 +194,13 @@ export default function SharedTaskDetailsScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#E1DAD6",
+  },
+
+  scrollContent: {
     padding: 20,
     paddingTop: 60,
-    backgroundColor: "#E1DAD6",
+    paddingBottom: 140,
   },
 
   backButton: {
@@ -274,7 +331,6 @@ const styles = StyleSheet.create({
 
   feedbackPopup: {
     position: "absolute",
-
     bottom: 100,
     left: 30,
     right: 30,
@@ -290,13 +346,13 @@ const styles = StyleSheet.create({
 
     zIndex: 20,
 
-    shadowColor: "#000",
+    shadowColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
 
     elevation: 5,
   },
@@ -306,5 +362,67 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     textAlign: "center",
+  },
+  commentHeading: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#373735",
+    marginTop: 26,
+    marginBottom: 4,
+  },
+
+  commentHelp: {
+    fontSize: 13,
+    color: "#6B7280",
+    marginBottom: 10,
+  },
+
+  commentInput: {
+    minHeight: 80,
+    backgroundColor: "#F7F8FA",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    borderRadius: 9,
+    padding: 12,
+    fontSize: 14,
+    color: "#373735",
+    textAlignVertical: "top",
+  },
+
+  commentButton: {
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 9,
+    backgroundColor: "#6F6E60",
+    alignItems: "center",
+  },
+
+  commentButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+  },
+
+  commentsSection: {
+    marginTop: 20,
+  },
+
+  commentsTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#373735",
+    marginBottom: 8,
+  },
+
+  commentCard: {
+    backgroundColor: "#F3F1EF",
+    padding: 12,
+    borderRadius: 9,
+    marginBottom: 8,
+  },
+
+  commentText: {
+    fontSize: 14,
+    color: "#373735",
+    lineHeight: 20,
   },
 });

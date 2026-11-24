@@ -123,7 +123,24 @@ export default function App() {
   const [editDescription, setEditDescription] = useState("");
   const [editDueDate, setEditDueDate] = useState("");
 
+  // COMMENT / MESSAGE SHARED TASK
+  const [comments, setComments] = useState({});
+
   // FUNCTIONS ===
+
+  // COMMENT
+  const addComment = (taskId, commentText) => {
+    setComments((currentComments) => ({
+      ...currentComments,
+      [taskId]: [
+        ...(currentComments[taskId] || []),
+        {
+          id: Date.now().toString(),
+          text: commentText,
+        },
+      ],
+    }));
+  };
 
   // COMPLETE / INCOMPLETE
   const toggleComplete = (id) => {
@@ -289,6 +306,8 @@ export default function App() {
         currentScreen={currentScreen}
         setCurrentScreen={setCurrentScreen}
         setSelectedTaskId={setSelectedTaskId}
+        comments={comments}
+        addComment={addComment}
       />
     );
   }

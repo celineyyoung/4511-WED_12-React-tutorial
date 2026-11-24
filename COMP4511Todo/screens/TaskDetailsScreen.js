@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 
 import BottomNav from "../components/BottomNav";
-
+import ConfirmationModal from "../components/ConfirmationModal";
 export default function TaskDetailsScreen({
   selectedTask,
   setSelectedTaskId,
@@ -116,45 +116,18 @@ export default function TaskDetailsScreen({
         </TouchableOpacity>
       </View>
 
-      <Modal
+      <ConfirmationModal
         visible={showVisibilityConfirmation}
-        transparent={true}
-        animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.confirmationPopup}>
-            <Text style={styles.confirmationTitle}>
-              {makingPublic ? "Make Task Public?" : "Make Task Private?"}
-            </Text>
-
-            <Text style={styles.confirmationText}>
-              {makingPublic
-                ? "Your friends will be able to see this task and send you encouragement."
-                : "Your friends will no longer be able to see or encourage you on this task."}
-            </Text>
-
-            <View style={styles.modalButtonRow}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setShowVisibilityConfirmation(false)}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.confirmVisibilityButton,
-                  makingPublic
-                    ? styles.confirmPublicButton
-                    : styles.confirmPrivateButton,
-                ]}
-                onPress={confirmVisibilityChange}>
-                <Text style={styles.confirmVisibilityButtonText}>
-                  {makingPublic ? "Make Public" : "Make Private"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        title={makingPublic ? "Make Task Public?" : "Make Task Private?"}
+        message={
+          makingPublic
+            ? "Your friends will be able to see this task and send you encouragement."
+            : "Your friends will no longer be able to see or encourage you on this task."
+        }
+        confirmText={makingPublic ? "Make Public" : "Make Private"}
+        onCancel={() => setShowVisibilityConfirmation(false)}
+        onConfirm={confirmVisibilityChange}
+      />
 
       <BottomNav
         currentScreen={currentScreen}
