@@ -40,12 +40,21 @@ The app uses a bottom navigation bar with three main sections:
 How to Use the App
 
 Add Task: Create a task with a title, description, due date and Private/Public visibility.
+
 Manage Tasks: Complete, edit, delete or view more details about existing tasks.
+
 Task Visibility: Change a task between Private and Public, with confirmation before the visibility changes.
+
 Filter Tasks: Use All, Active and Completed filters to organise the My Tasks page.
+
 Shared Tasks: Open tasks shared by friends and view their details.
+
 Encouragement: Send quick responses such as Good Job, Keep Going, Lock In or Checking In.
+
 Comments: Add a personal comment to a friend's shared task.
+
 Activity: View encouragement and interactions received from friends.
+
 Profile: View or edit profile information and see your public tasks.
+
 Friends: Add or remove people from the Friends List.
